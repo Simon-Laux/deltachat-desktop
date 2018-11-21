@@ -123,7 +123,7 @@ class ChatView extends React.Component {
           setupMessage={dialogProps.setupMessage}
           onClose={this.onCloseDialog}
         />
-        <RenderMedia
+        <dialogs.RenderMedia
           message={dialogProps.attachmentMessage}
           onClose={this.onCloseDialog}
         />
