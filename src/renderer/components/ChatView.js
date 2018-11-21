@@ -16,15 +16,12 @@ class ChatView extends React.Component {
     super(props)
     this.state = {
       error: false,
-      setupMessage: false,
-      attachmentMessage: {},
-      messageDetail: {}
+      dialogProps: false
     }
 
     this.writeMessage = this.writeMessage.bind(this)
-    this.onMessageDetailClose = this.onMessageDetailClose.bind(this)
-    this.onCloseAttachmentView = this.onCloseAttachmentView.bind(this)
-    this.onSetupMessageClose = this.onSetupMessageClose.bind(this)
+    this.onClickContact = this.onClickContact.bind(this)
+    this.onCloseDialog = this.onCloseDialog.bind(this)
     this.focusInputMessage = this.focusInputMessage.bind(this)
     this.scrollToBottom = this.scrollToBottom.bind(this)
     this.conversationDiv = React.createRef()
@@ -86,56 +83,55 @@ class ChatView extends React.Component {
     el.focus()
   }
 
-  onClickAttachment (attachmentMessage) {
-    this.setState({ attachmentMessage })
-  }
-
-  onClickSetupMessage (setupMessage) {
-    this.setState({ setupMessage })
-  }
-
-  onCloseAttachmentView () {
-    this.setState({ attachmentMessage: {} })
-  }
-
-  onSetupMessageClose () {
-    // TODO: go back to main chat screen
-    this.setState({ setupMessage: false })
-  }
-
-  onShowDetail (message) {
-    this.setState({ messageDetail: message })
-  }
-
-  onMessageDetailClose () {
-    this.setState({ messageDetail: {} })
-  }
-
   onDeleteMessage (message) {
     message.onDelete()
     this.onMessageDetailClose()
   }
 
+  onClickAttachment (attachmentMessage) {
+    this.setState({ dialogProps: { attachmentMessage } })
+  }
+
+  onClickSetupMessage (setupMessage) {
+    this.setState({ dialogProps: { setupMessage } })
+  }
+
+  onShowDetail (messageDetail) {
+    this.setState({ dialogProps: { messageDetail } })
+  }
+
+  onClickContact (contactId) {
+    this.setState({ dialogProps: { contactId } })
+  }
+
+  onCloseDialog () {
+    this.setState({ dialogProps: false })
+  }
+
   render () {
-    const { attachmentMessage, setupMessage, messageDetail } = this.state
+    const { dialogProps, messageDetail } = this.state
     const { chat } = this.props
 
     return (
       <div className='ChatView'>
+        <dialogs.ContactDetail
+          id={dialogProps.contactId}
+          onClose={this.onCloseDialog}
+        />
         <dialogs.SetupMessage
           userFeedback={this.props.userFeedback}
-          setupMessage={setupMessage}
-          onClose={this.onSetupMessageClose}
+          setupMessage={dialogProps.setupMessage}
+          onClose={this.onCloseDialog}
         />
         <RenderMedia
-          message={attachmentMessage}
-          onClose={this.onCloseAttachmentView}
+          message={dialogProps.attachmentMessage}
+          onClose={this.onCloseDialog}
         />
         <dialogs.MessageDetail
           onDelete={this.onDeleteMessage.bind(this, messageDetail)}
           chat={chat}
-          message={messageDetail}
-          onClose={this.onMessageDetailClose}
+          message={dialogProps.messageDetail}
+          onClose={this.onCloseDialog}
         />
         <div id='the-conversation' ref={this.conversationDiv}>
           <ConversationContext>
@@ -144,6 +140,7 @@ class ChatView extends React.Component {
               return Message.render({
                 message,
                 chat,
+                onClickContact: this.onClickContact,
                 onClickSetupMessage: this.onClickSetupMessage.bind(this, message),
                 onShowDetail: this.onShowDetail.bind(this, message),
                 onClickAttachment: this.onClickAttachment.bind(this, message)
