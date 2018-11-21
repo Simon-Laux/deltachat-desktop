@@ -32,7 +32,7 @@ function render (props) {
  */
 class RenderMessage extends React.Component {
   render () {
-    const { onShowDetail, onClickAttachment, chat } = this.props
+    const { onClickContact, onShowDetail, onClickAttachment, chat } = this.props
     const message = this.props.message
     const { fromId, id } = message
     const msg = message.msg
@@ -40,7 +40,7 @@ class RenderMessage extends React.Component {
 
     const contact = {
       onSendMessage: () => console.log('send a message to', fromId),
-      onClick: () => console.log('clicking contact', fromId)
+      onClick: () => { onClickContact(fromId) }
     }
 
     const props = {
