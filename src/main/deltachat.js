@@ -340,6 +340,14 @@ class DeltaChatController {
     return this._dc.getSecurejoinQrCode(chatId)
   }
 
+  backupImport (filename) {
+    this._dc.importExport(C.DC_IMEX_IMPORT_BACKUP, filename)
+  }
+
+  backupExport (directory) {
+    this._dc.importExport(C.DC_IMEX_EXPORT_BACKUP, directory)
+  }
+
   /**
    * Returns the state in json format
    */
