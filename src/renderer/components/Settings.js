@@ -1,6 +1,5 @@
 const React = require('react')
 const { ipcRenderer, remote } = require('electron')
-const path = require('path')
 
 const {
   Classes,
@@ -63,17 +62,19 @@ class Settings extends React.Component {
     const { isOpen, onClose } = this.props
     const { keyTransfer } = this.state
 
+    const tx = window.translate
+    const title = tx('settings.title')
+
     return (
       <div>
         <dialogs.KeyTransfer isOpen={keyTransfer} onClose={this.onKeyTransferComplete} />
         <Dialog
           isOpen={isOpen}
-          title='Settings'
+          title={title}
           icon='info-sign'
           onClose={onClose}>
           <div className={Classes.DIALOG_BODY}>
-            <h1>Settings</h1>
-            <Button onClick={this.initiateKeyTransfer}>Initiate Key Transfer</Button>
+            <Button onClick={this.initiateKeyTransfer}>{tx('initiateKeyTransferTitle')}</Button>
             <Button onClick={this.onBackupExport}>Export backup...</Button>
             <Button onClick={this.onBackupImport}>Import backup...</Button>
           </div>

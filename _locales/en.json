@@ -782,5 +782,9 @@
   "contactDetailTitle": {
     "message": "Contact Detail",
     "description": "Contact Detail title for dialog"
+  },
+  "settings.title": {
+    "message": "Settings",
+    "description": "Title for settings dialog"
   }
 }

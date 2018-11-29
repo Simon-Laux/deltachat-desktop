@@ -127,7 +127,7 @@ class DeltaMenu extends React.Component {
       {chatMenu}
       <MenuItem
         icon='settings'
-        text='Settings'
+        text={tx('settings.title')}
         onClick={openSettings}
       />
       <MenuItem icon='log-out' text={tx('logout')} onClick={controller.logout} />
