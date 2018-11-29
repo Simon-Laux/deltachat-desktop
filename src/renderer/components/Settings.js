@@ -1,12 +1,19 @@
 const React = require('react')
 const dialogs = require('./dialogs')
 
+const {
+  Classes,
+  Button,
+  ButtonGroup,
+  Dialog
+} = require('@blueprintjs/core')
+
 class Settings extends React.Component {
   constructor (props) {
+    super(props)
     this.state = {
       keyTransfer: false
     }
-    super(props)
     this.initiateKeyTransfer = this.initiateKeyTransfer.bind(this)
     this.onKeyTransferComplete = this.onKeyTransferComplete.bind(this)
   }
@@ -20,13 +27,22 @@ class Settings extends React.Component {
   }
 
   render () {
+    const { isOpen, onClose } = this.props
     const { keyTransfer } = this.state
 
     return (
       <div>
         <dialogs.KeyTransfer isOpen={keyTransfer} onClose={this.onKeyTransferComplete} />
-
-        <h1>Settings</h1>
+        <Dialog
+          isOpen={isOpen}
+          title='Settings'
+          icon='info-sign'
+          onClose={onClose}>
+          <div className={Classes.DIALOG_BODY}>
+            <h1>Settings</h1>
+            <Button onClick={this.initiateKeyTransfer}>Initiate Key Transfer</Button>
+          </div>
+        </Dialog>
       </div>
     )
   }

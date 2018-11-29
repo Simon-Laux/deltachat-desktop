@@ -2,6 +2,8 @@ const React = require('react')
 const { ipcRenderer } = require('electron')
 const { InputGroup } = require('@blueprintjs/core')
 
+const Settings = require('./Settings')
+const dialogs = require('./dialogs')
 const Menu = require('./Menu')
 const ChatList = require('./ChatList')
 const ChatView = require('./ChatView')
@@ -63,10 +65,13 @@ class SplittedChatListAndView extends React.Component {
     super(props)
 
     this.state = {
+      settings: false,
       deadDropChat: false,
       queryStr: ''
     }
 
+    this.openSettings = this.openSettings.bind(this)
+    this.onCloseSettings = this.onCloseSettings.bind(this)
     this.onShowArchivedChats = this.showArchivedChats.bind(this, true)
     this.onHideArchivedChats = this.showArchivedChats.bind(this, false)
     this.onChatClick = this.onChatClick.bind(this)
@@ -108,14 +113,19 @@ class SplittedChatListAndView extends React.Component {
     this.setState({ settings: true })
   }
 
+  onCloseSettings () {
+    this.setState({ settings: false })
+  }
+
   render () {
     const { deltachat } = this.props
     const { selectedChat, showArchivedChats } = deltachat
-    const { deadDropChat } = this.state
+    const { deadDropChat, settings } = this.state
 
     const tx = window.translate
 
     const menu = <Menu
+      openSettings={this.openSettings}
       changeScreen={this.props.changeScreen}
       selectedChat={selectedChat}
       showArchivedChats={showArchivedChats}
@@ -147,6 +157,7 @@ class SplittedChatListAndView extends React.Component {
             </NavbarGroup>
           </Navbar>
         </NavbarWrapper>
+        <Settings isOpen={settings} onClose={this.onCloseSettings} />
         <dialogs.DeadDrop deadDropChat={deadDropChat} onClose={this.onDeadDropClose} />
         <BelowNavbar>
           <ChatList

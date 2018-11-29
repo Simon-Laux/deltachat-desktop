@@ -33,10 +33,6 @@ class Controller {
     ipcRenderer.send('dispatch', 'archiveChat', selectedChat.id, archive)
   }
 
-  onSettings () {
-    this.props.changeScreen('Settings')
-  }
-
   onBlockContact () {
     const selectedChat = this.props.selectedChat
     const tx = window.translate
@@ -74,6 +70,7 @@ class Controller {
 class DeltaMenu extends React.Component {
   render () {
     const {
+      openSettings,
       selectedChat,
       showArchivedChats
     } = this.props
@@ -131,7 +128,7 @@ class DeltaMenu extends React.Component {
       <MenuItem
         icon='settings'
         text='Settings'
-        onClick={controller.onSettings}
+        onClick={openSettings}
       />
       <MenuItem icon='log-out' text={tx('logout')} onClick={controller.logout} />
     </Menu>)
