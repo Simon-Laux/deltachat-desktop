@@ -3,7 +3,6 @@ const { ipcRenderer } = require('electron')
 const { InputGroup } = require('@blueprintjs/core')
 
 const Menu = require('./Menu')
-const dialogs = require('./dialogs')
 const ChatList = require('./ChatList')
 const ChatView = require('./ChatView')
 const Centered = require('./helpers/Centered')
@@ -65,7 +64,6 @@ class SplittedChatListAndView extends React.Component {
 
     this.state = {
       deadDropChat: false,
-      keyTransfer: false,
       queryStr: ''
     }
 
@@ -74,8 +72,6 @@ class SplittedChatListAndView extends React.Component {
     this.onChatClick = this.onChatClick.bind(this)
     this.onDeadDropClick = this.onDeadDropClick.bind(this)
     this.onDeadDropClose = this.onDeadDropClose.bind(this)
-    this.initiateKeyTransfer = this.initiateKeyTransfer.bind(this)
-    this.onKeyTransferComplete = this.onKeyTransferComplete.bind(this)
     this.handleSearchChange = this.handleSearchChange.bind(this)
   }
 
@@ -104,29 +100,24 @@ class SplittedChatListAndView extends React.Component {
     this.setState({ deadDropChat: chat })
   }
 
-  onKeyTransferComplete () {
-    this.setState({ keyTransfer: false })
-  }
-
-  initiateKeyTransfer () {
-    this.setState({ keyTransfer: true })
-  }
-
   handleSearchChange (event) {
     this.searchChats(event.target.value)
+  }
+
+  openSettings () {
+    this.setState({ settings: true })
   }
 
   render () {
     const { deltachat } = this.props
     const { selectedChat, showArchivedChats } = deltachat
-    const { deadDropChat, keyTransfer } = this.state
+    const { deadDropChat } = this.state
 
     const tx = window.translate
 
     const menu = <Menu
       changeScreen={this.props.changeScreen}
       selectedChat={selectedChat}
-      initiateKeyTransfer={this.initiateKeyTransfer}
       showArchivedChats={showArchivedChats}
     />
 
@@ -156,7 +147,6 @@ class SplittedChatListAndView extends React.Component {
             </NavbarGroup>
           </Navbar>
         </NavbarWrapper>
-        <dialogs.KeyTransfer isOpen={keyTransfer} onClose={this.onKeyTransferComplete} />
         <dialogs.DeadDrop deadDropChat={deadDropChat} onClose={this.onDeadDropClose} />
         <BelowNavbar>
           <ChatList

@@ -15,6 +15,14 @@ class Controller {
     autobind(this)
   }
 
+  onCreateChat () {
+    this.props.changeScreen('CreateChat')
+  }
+
+  onEditGroup () {
+    this.props.changeScreen('EditGroup', { chat: this.props.selectedChat })
+  }
+
   onLeaveGroup () {
     const selectedChat = this.props.selectedChat
     ipcRenderer.send('dispatch', 'leaveGroup', selectedChat.id)
@@ -23,6 +31,10 @@ class Controller {
   onArchiveChat (archive) {
     const selectedChat = this.props.selectedChat
     ipcRenderer.send('dispatch', 'archiveChat', selectedChat.id, archive)
+  }
+
+  onSettings () {
+    this.props.changeScreen('Settings')
   }
 
   onBlockContact () {
@@ -62,10 +74,8 @@ class Controller {
 class DeltaMenu extends React.Component {
   render () {
     const {
-      initiateKeyTransfer,
       selectedChat,
-      showArchivedChats,
-      changeScreen
+      showArchivedChats
     } = this.props
 
     const tx = window.translate
@@ -76,14 +86,6 @@ class DeltaMenu extends React.Component {
     const archiveMsg = isGroup ? tx('archiveGroup') : tx('archiveChat')
     const unArchiveMsg = isGroup ? tx('unArchiveGroup') : tx('unArchiveChat')
     const deleteMsg = isGroup ? tx('deleteGroup') : tx('deleteChat')
-
-    var onEditGroup = () => {
-      changeScreen('EditGroup', { chat: selectedChat })
-    }
-
-    var onCreateChat = () => {
-      changeScreen('CreateChat')
-    }
 
     let chatMenu = <div />
 
@@ -106,7 +108,7 @@ class DeltaMenu extends React.Component {
               <MenuItem
                 icon='edit'
                 text={tx('editGroup')}
-                onClick={onEditGroup}
+                onClick={controller.onEditGroup}
               />
               <MenuItem
                 icon='log-out' text={tx('leaveGroup')}
@@ -124,17 +126,12 @@ class DeltaMenu extends React.Component {
     }
 
     return (<Menu>
-      <MenuItem icon='plus' text={tx('newChat')} onClick={onCreateChat} />
+      <MenuItem icon='plus' text={tx('newChat')} onClick={controller.onCreateChat} />
       {chatMenu}
       <MenuItem
-        icon='blocked-person'
-        text={tx('unblockContacts')}
-        onClick={controller.onUnblockContacts}
-      />
-      <MenuItem
-        icon='exchange'
-        text={tx('initiateKeyTransferTitle')}
-        onClick={initiateKeyTransfer}
+        icon='settings'
+        text='Settings'
+        onClick={controller.onSettings}
       />
       <MenuItem icon='log-out' text={tx('logout')} onClick={controller.logout} />
     </Menu>)
