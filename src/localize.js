@@ -7,7 +7,7 @@ const merge = require('lodash.merge')
 const fs = require('fs')
 const path = require('path')
 
-const log = require('./main/log')
+const log = require('./logger').getLogger('main/menu')
 
 function translate (messages) {
   function getMessage (key, substitutions) {
